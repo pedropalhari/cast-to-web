@@ -6,7 +6,7 @@ Linux has a bug that Chrome cannot cast the screen to Chromecast with sound (mak
 
 ## With `npx`
 
-- `npx github:<user>/<repository>`
+- `npx pedropalhari/chromecast-with-subtitles [filmpath].mp4 [subpath].srt`
 
 ## Without `npx`
 
