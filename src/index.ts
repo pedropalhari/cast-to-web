@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import express from "express";
 import path from "path";
 import fs from "fs";
@@ -8,12 +9,16 @@ const { argv } = process;
 let [_1, _2, filmPath, subPath] = argv;
 
 /**
- * Possible future VTT manual 
+ * Possible future VTT manual
  */
 // if (argv.includes("--vtt")) {
 //   exec("xdg-open https://subtitletools.com/convert-to-vtt-online");
 //   process.exit();
 // }
+
+if (!filmPath || !subPath) {
+  throw "You didn't provide an absolute film or subtitle path. Check the README!";
+}
 
 let app = express();
 
@@ -55,5 +60,6 @@ app.get("/sub", (req, res) => {
 });
 
 app.listen(8080, () => {
+  console.log("\n\nRunning succesfully!");
   console.log("http://localhost:8080");
 });
