@@ -7,7 +7,7 @@ Linux has a bug that Chrome cannot cast the screen to Chromecast with sound (mak
 ## With `npx`
 
 - `npx pedropalhari/chromecast-with-subtitles [filmpath].mp4 [subpath].srt`
-- Open `http://localhost:8080` using chrome and cast this tab to chromecast.
+- Open `http://localhost:8080` using Chrome and cast this tab to Chromecast.
 
 ## Without `npx`
 
@@ -15,7 +15,7 @@ Linux has a bug that Chrome cannot cast the screen to Chromecast with sound (mak
 - `yarn`
 - `yarn build`
 - `yarn start [filmpath].mp4 [subpath].srt`
-- Open `http://localhost:8080` using chrome and cast this tab to chromecast.
+- Open `http://localhost:8080` using Chrome and cast this tab to Chromecast.
 
 Both filmpath and subpath must be absolute, they also should be `.mp4` and `.srt` in order.
 
