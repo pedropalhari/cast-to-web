@@ -7,6 +7,7 @@ Linux has a bug that Chrome cannot cast the screen to Chromecast with sound (mak
 ## With `npx`
 
 - `npx pedropalhari/chromecast-with-subtitles [filmpath].mp4 [subpath].srt`
+- Open `http://localhost:8080` using chrome and cast this tab to chromecast.
 
 ## Without `npx`
 
