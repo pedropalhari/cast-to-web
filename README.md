@@ -18,3 +18,7 @@ Linux has a bug that Chrome cannot cast the screen to Chromecast with sound (mak
 - Open `http://localhost:8080` using chrome and cast this tab to chromecast.
 
 Both filmpath and subpath must be absolute, they also should be `.mp4` and `.srt` in order.
+
+## Demo
+
+![](./assets/demo.gif)
