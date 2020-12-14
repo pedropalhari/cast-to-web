@@ -4,6 +4,12 @@ Linux has a bug that Chrome cannot cast the screen to Chromecast with sound (mak
 
 # Using
 
+## With `npx`
+
+- `npx github:<user>/<repository>`
+
+## Without `npx`
+
 - Clone this repo
 - `yarn`
 - `yarn build`
