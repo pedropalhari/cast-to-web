@@ -12,6 +12,7 @@ Linux has a bug that Chrome cannot cast the screen to Chromecast with sound (mak
 
 - `npx pedropalhari/cast-to-web [filmpath].mp4 [subpath].srt`
 - Open `http://localhost:8080` using Chrome and cast this tab to Chromecast.
+- or open `http://ip:8080/` using a browser in the desired device and play it there.
 
 ## Without `npx`
 
