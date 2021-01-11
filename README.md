@@ -1,4 +1,4 @@
-# This repo is being remodelled to "Cast to web". It can be used in a number of situations, eg: casting to TVs without Miracast, using the integrated browser. This readme will pass a reformulation shortly but the `npx` command is already poiting to the new repo and functional.
+# This repo is being remodeled to "Cast to web". It can be used in a number of situations, eg: casting to TVs without Miracast, using the integrated browser. This readme will pass a reformulation shortly but the `npx` command is already poiting to the new repo and functional.
 
 It will include more tutorials and support different video files to be a general tool to streaming video with subtitles easily.
 
