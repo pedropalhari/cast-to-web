@@ -1,0 +1,39 @@
+<style>
+  body {
+    margin: 0px;
+    background-color: black;
+  }
+</style>
+
+<video
+  style="width: 100vw; height: 100vh"
+  id="video"
+  controls
+  preload="metadata"
+></video>
+
+<script>
+  let searchParamsString = window.location.search.substring(
+    1,
+    window.location.search.length
+  );
+
+  let searchParams = {};
+
+  let searchParamsArray = searchParamsString.split("&");
+  console.log({ searchParamsArray });
+
+  searchParamsArray.forEach((fullParam) => {
+    let [paramName, paramValue] = fullParam.split("=");
+    searchParams[paramName] = paramValue;
+  });
+
+  console.log({ searchParams });
+
+  let videoElement = document.querySelector("video#video");
+
+  videoElement.innerHTML = `
+     <source src="/video/${searchParams.filmPath}" type="video/mp4" />
+     <track label="English" kind="subtitles" srclang="en" src="/sub/${searchParams.subPath}" default />
+  `;
+</script>

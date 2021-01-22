@@ -1,5 +1,87 @@
-<video id="video" controls preload="metadata">
-  <source src="/video" type="video/mp4" />
+<style>
+  * {
+    box-sizing: border-box;
+  }
 
-  <track label="English" kind="subtitles" srclang="en" src="/sub" default />
-</video>
+  body {
+    row-gap: 20px;
+    column-gap: 20px;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    height: fit-content;
+
+    background-color: #323032;
+  }
+
+  .filmCard {
+    width: 200px;
+    height: 300px;
+
+    position: relative;
+
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  }
+
+  .filmCard > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .filmInfo {
+    position: absolute;
+    width: 100%;
+    height: 100px;
+
+    background-color: #00000066;
+
+    color: white;
+    padding: 10px;
+
+    bottom: 0px;
+  }
+</style>
+
+<body></body>
+
+<script>
+  const { origin: BASE_URL } = window.location;
+
+  function addFilm({ index, name, filmPath, subPath, imagePath }) {
+    let filmDiv = document.createElement("div");
+    filmDiv.style.height = "fit-content";
+    filmDiv.innerHTML = `
+      <div id="film_${index}" class="filmCard">
+        <img
+          src="${imagePath || "/placeholder.png"}"
+        />
+
+        <div class="filmInfo">
+          ${name}  
+        </div>
+      </div>
+      `;
+
+    document.body.appendChild(filmDiv);
+
+    filmDiv.addEventListener("click", () => {
+      window.location.href = `${BASE_URL}/watch?filmPath=${encodeURIComponent(
+        filmPath
+      )}&subPath=${encodeURIComponent(subPath)}`;
+    });
+  }
+
+  (async () => {
+    let filmsResponse = await fetch(`${origin}/path`);
+    let { films } = await filmsResponse.json();
+
+    const FILM = films.forEach((film, index) => {
+      addFilm({ index, ...film });
+    });
+
+    console.log({ films });
+  })();
+</script>
