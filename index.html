@@ -56,7 +56,11 @@
     filmDiv.innerHTML = `
       <div id="film_${index}" class="filmCard">
         <img
-          src="${imagePath || "/placeholder.png"}"
+          src="${
+            imagePath
+              ? `/img/${encodeURIComponent(imagePath)}`
+              : "/placeholder.png"
+          }"
         />
 
         <div class="filmInfo">

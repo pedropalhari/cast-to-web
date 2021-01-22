@@ -80,6 +80,11 @@ app.get("/sub/:subPath", (req, res) => {
         .pipe(srt_to_vtt_1.default())
         .pipe(res);
 });
+app.get("/img/:imagePath", (req, res) => {
+    return fs_1.default
+        .createReadStream(decodeURIComponent(req.params.imagePath))
+        .pipe(res);
+});
 app.listen(8080, () => {
     console.log("\n\nRunning succesfully!");
     console.log("http://localhost:8080");
@@ -92,7 +97,9 @@ function scanDirectory() {
             // Find the files
             let filmPathFileName = folderContents.find((content) => content.includes(".mp4"));
             let subPathFileName = folderContents.find((content) => content.includes(".srt"));
-            let imagePathFileName = folderContents.find((content) => content.includes(".png"));
+            let imagePathFileName = folderContents.find((content) => content.includes(".png") ||
+                content.includes(".jpg") ||
+                content.includes(".jpeg"));
             let filmPath = null;
             let subPath = null;
             let imagePath = null;
