@@ -1,5 +1,5 @@
 {
-  "name": "ts-boilerplate",
+  "name": "cast-to-web",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "build": "tsc"
   },
   "bin": {
-    "chrome-with-sub": "dist/index.js"
+    "cast-to-web": "dist/index.js"
   },
   "license": "MIT",
   "dependencies": {
