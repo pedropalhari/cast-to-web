@@ -2,32 +2,50 @@
 import express from "express";
 import path from "path";
 import fs from "fs";
+import fsPromises from "fs/promises";
 import { exec } from "child_process";
 import srt2vtt from "srt-to-vtt";
 
 const { argv } = process;
-let [_1, _2, filmPath, subPath] = argv;
+let [_1, _2, rootDirFromArgs, subPath] = argv;
 
-/**
- * Possible future VTT manual
- */
-// if (argv.includes("--vtt")) {
-//   exec("xdg-open https://subtitletools.com/convert-to-vtt-online");
-//   process.exit();
-// }
+let rootDir = process.cwd();
 
-if (!filmPath || !subPath) {
-  throw "You didn't provide an absolute film or subtitle path. Check the README!";
+if (rootDirFromArgs) {
+  rootDir = rootDirFromArgs;
 }
+
+// if (!filmPath || !subPath) {
+//   throw "You didn't provide an absolute film or subtitle path. Check the README!";
+// }
 
 let app = express();
 
+/**
+ * sort-of static files
+ */
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../index.html"));
+  return res.sendFile(path.join(__dirname, "../index.html"));
 });
 
-app.get("/video", function (req, res) {
-  const path = filmPath;
+app.get("/watch", (req, res) => {
+  return res.sendFile(path.join(__dirname, "../watch.html"));
+});
+
+app.get("/placeholder.png", async (req, res) => {
+  return res.sendFile(path.join(__dirname, "../placeholder.png"));
+});
+
+// Routes
+
+app.get("/path", async (req, res) => {
+  let films = await scanDirectory();
+
+  return res.json({ films });
+});
+
+app.get("/video/:filmPath", function (req, res) {
+  const path = decodeURIComponent(req.params.filmPath);
   const stat = fs.statSync(path);
   const fileSize = stat.size;
   const range = req.headers.range;
@@ -44,22 +62,97 @@ app.get("/video", function (req, res) {
       "Content-Type": "video/mp4",
     };
     res.writeHead(206, head);
-    file.pipe(res);
+    return file.pipe(res);
   } else {
     const head = {
       "Content-Length": fileSize,
       "Content-Type": "video/mp4",
     };
     res.writeHead(200, head);
-    fs.createReadStream(path).pipe(res);
+    return fs.createReadStream(path).pipe(res);
   }
 });
 
-app.get("/sub", (req, res) => {
-  fs.createReadStream(subPath).pipe(srt2vtt()).pipe(res);
+app.get("/sub/:subPath", (req, res) => {
+  return fs
+    .createReadStream(decodeURIComponent(req.params.subPath))
+    .pipe(srt2vtt())
+    .pipe(res);
+});
+
+app.get("/img/:imagePath", (req, res) => {
+  return fs
+    .createReadStream(decodeURIComponent(req.params.imagePath))
+    .pipe(res);
 });
 
 app.listen(8080, () => {
   console.log("\n\nRunning succesfully!");
   console.log("http://localhost:8080");
 });
+
+interface Film {
+  name: string;
+  filmPath: string | null;
+  subPath: string | null;
+  imagePath: string | null;
+}
+
+async function scanDirectory() {
+  let filmFolders = fs.readdirSync(rootDir);
+
+  let films = await Promise.all<Film>(
+    filmFolders.map(async (filmName) => {
+      let folderContents = await fsPromises.readdir(
+        path.join(rootDir, filmName)
+      );
+
+      // Find the files
+      let filmPathFileName = folderContents.find((content) =>
+        content.includes(".mp4")
+      );
+
+      let subPathFileName = folderContents.find((content) =>
+        content.includes(".srt")
+      );
+
+      let imagePathFileName = folderContents.find(
+        (content) =>
+          content.includes(".png") ||
+          content.includes(".jpg") ||
+          content.includes(".jpeg")
+      );
+
+      let filmPath = null;
+      let subPath = null;
+      let imagePath = null;
+
+      if (filmPathFileName) {
+        filmPath = path.join(rootDir, filmName, filmPathFileName);
+      }
+
+      if (subPathFileName) {
+        subPath = path.join(rootDir, filmName, subPathFileName);
+      }
+
+      if (imagePathFileName) {
+        imagePath = path.join(rootDir, filmName, imagePathFileName);
+      }
+
+      let film: Film = {
+        name: filmName,
+        filmPath,
+        subPath,
+        imagePath,
+      };
+
+      // Makes them all absolute paths
+      return film;
+    })
+  );
+
+  // Filter missing films
+  films = films.filter((f) => f.filmPath);
+
+  return films;
+}
